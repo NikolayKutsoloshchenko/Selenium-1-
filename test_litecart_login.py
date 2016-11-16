@@ -6,7 +6,7 @@ import pytest
 
 def test_login():
     driver=webdriver.Chrome()
-    driver.get('http://192.168.204.132/litecart/admin')
+    driver.get('http://localhost/litecart/admin/')
     driver.find_element_by_name('username').send_keys('admin')
     driver.find_element_by_name('password').send_keys('admin')
     driver.find_element_by_name('login').click()
@@ -14,7 +14,7 @@ def test_login():
 
 def test_remember_me_button():
     driver = webdriver.Chrome()
-    driver.get('http://192.168.204.132/litecart/admin')
+    driver.get('http://localhost/litecart/admin/')
     remember_me=driver.find_element_by_name('remember_me')
     remember_me.click()
     remember_me.click()
