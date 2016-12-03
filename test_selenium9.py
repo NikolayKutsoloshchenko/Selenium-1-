@@ -3,7 +3,6 @@ from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pytest
-import time
 
 @pytest.fixture
 def driver(request):
@@ -32,13 +31,32 @@ def test_countries(driver):
         element_name=element.find_element_by_css_selector('a')
         countries_names.append(element_name.get_attribute('textContent'))
     assert countries_names == sorted(countries_names)
-    for element in list_of_countries:
-        zones = element.find_element_by_xpath('.//td[6]')
+    for number in range(len(list_of_countries)):
+        countries = driver.find_elements_by_css_selector('tr.row')
+        zones = countries[number].find_element_by_xpath('.//td[6]')
         if zones.get_attribute('textContent') is not '0':
             zones_names = []
-            element.find_element_by_css_selector('a').click()
-            zone_name=driver.find_elements_by_xpath('//input [contains(@name,"name")]')
+            countries[number].find_element_by_css_selector('a').click()
+            zone_name=driver.find_elements_by_xpath('//tbody/input [contains(@name,"name")]')
             for zone in zone_name:
-                zones_names.append(zone.get_attribute('textContennt'))
+                zones_names.append(zone.get_attribute('value'))
             assert zones_names == sorted(zones_names)
-            list_of_countries = driver.find_elements_by_css_selector('tr.row')
+            driver.find_element_by_xpath('//a[contains(@href,"countries")]').click()
+
+def test_zones_canada(driver):
+    driver.find_element_by_xpath('//a[contains(@href,"geo_zones")]').click()
+    driver.find_element_by_xpath('//a[contains(text(),"Canada")]').click()
+    selected_zones = driver.find_elements_by_xpath('//select[contains(@name,"zone_code")]/option[@selected]')
+    zones = []
+    for zone in selected_zones:
+        zones.append(zone.get_attribute('textContent'))
+    assert zones == sorted(zones)
+
+def test_zones_usa(driver):
+    driver.find_element_by_xpath('//a[contains(@href,"geo_zones")]').click()
+    driver.find_element_by_xpath('//a[contains(text(),"America")]').click()
+    selected_zones = driver.find_elements_by_xpath('//select[contains(@name,"zone_code")]/option[@selected]')
+    zones = []
+    for zone in selected_zones:
+        zones.append(zone.get_attribute('textContent'))
+    assert zones == sorted(zones)
