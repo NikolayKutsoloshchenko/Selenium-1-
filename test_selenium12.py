@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from random import choice
+import time
 import pytest
 
 @pytest.fixture
@@ -21,6 +22,10 @@ def test_add_items(driver):
     General(driver)
     Information(driver)
     Prices(driver)
+    WebDriverWait(driver,10).until(EC.presence_of_element_located((By.CSS_SELECTOR,"table.dataTable")))
+    Table = driver.find_element_by_css_selector("table.dataTable")
+    added_item = Table.find_element_by_xpath('//a[contains(text(),"Duck Admiral")]')
+    assert added_item
 
 
 
@@ -35,8 +40,10 @@ def General(driver): # Заполним все поля на вкладке Gene
     Code = driver.find_element_by_css_selector('input[name="code"]')
     Code.send_keys('12345')
     # Выбираем категорию
+    driver.find_element_by_css_selector('input[name="categories[]"]').click() # cняли галочку с общей категории
     Category = driver.find_element_by_css_selector('input[data-name="Rubber Ducks"]')
     Category.click()
+    time.sleep(5)
     # Выбор по полу выбираем случайно
     Gender = driver.find_elements_by_css_selector('input[name="product_groups[]"]')
     Gender = choice(Gender)
@@ -54,7 +61,7 @@ def General(driver): # Заполним все поля на вкладке Gene
     Sold_out.send_keys(Keys.RETURN)
     # Добавляем картинку
     File_upload = File_upload = driver.find_element_by_css_selector('input[type="file"]')
-    File_upload.send_keys('E:\\selenium\\selenium learning\\picture.jpg')
+    File_upload.send_keys('D:\\selenium\\learning\\Selenium-1-\\picture.jpg')
     # В даты запишем даты с какого он активен, и до какого он активен
     Date_fields = driver.find_elements_by_xpath('//input[contains(@name,"date_valid")]')
     Date_fields[0].send_keys('09'+'12'+'2016')
@@ -101,3 +108,6 @@ def Prices(driver):
     Price.clear()
     Price.send_keys('45')
     Price_with_tax = driver.find_element_by_css_selector('input[name="gross_prices[USD]"]')
+    Price_with_tax.clear()
+    Price_with_tax.send_keys('55')
+    driver.find_element_by_css_selector('button[name="save"]').click()
