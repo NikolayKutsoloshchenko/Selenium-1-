@@ -59,9 +59,9 @@ def General(driver): # Заполним все поля на вкладке Gene
     Sold_out.send_keys(Keys.ARROW_DOWN)
     Sold_out.send_keys(Keys.ARROW_DOWN)
     Sold_out.send_keys(Keys.RETURN)
-    # Добавляем картинку
-    File_upload = File_upload = driver.find_element_by_css_selector('input[type="file"]')
-    File_upload.send_keys('D:\\selenium\\learning\\Selenium-1-\\picture.jpg')
+    # Добавляем картинку - закоментировал что бы у вас тест не валился
+    #File_upload = File_upload = driver.find_element_by_css_selector('input[type="file"]')
+    #File_upload.send_keys('D:\\selenium\\learning\\Selenium-1-\\picture.jpg')
     # В даты запишем даты с какого он активен, и до какого он активен
     Date_fields = driver.find_elements_by_xpath('//input[contains(@name,"date_valid")]')
     Date_fields[0].send_keys('09'+'12'+'2016')
