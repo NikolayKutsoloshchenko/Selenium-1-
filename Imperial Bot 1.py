@@ -14,6 +14,26 @@ class Imperial():
         self.get_help()
         self.cotsman_array = []
         self.kind_mail = {}
+        self.kick_dic = {}
+        self.get_kick_dic()
+        self.kick_dic ={}
+
+    def get_kick_dic(self):
+        file = open('D:\\Telebot\\kick', 'r')
+        file_raw = file.read()
+        file.close()
+        file_raw = file_raw.split('\n')
+        for element in file_raw:
+            temp = element.split()
+            if temp[0] in self.kick_dic ={}:
+                for ids in temp[0:]:
+                    if ids not in self.kick_dic[temp[0]]:
+                        self.kick_dic[temp[0]].append(ids)
+            else:
+                self.kick_dic[temp[0]] = []
+                for ids in temp[0:]:
+                    if ids not in self.kick_dic[temp[0]]:
+                        self.kick_dic[temp[0]].append(ids)
 
     def kind_mail_send(self,message):
         text = message['body']
@@ -99,43 +119,30 @@ class Imperial():
         self.send_to_chat(message, text)
 
     def kick(self,message):
-        if message['body'][:5].lower() != u'кикни':
+
+        body= message['body'].split()
+        domain = body[1]
+        if body[0].lower() != u'кикни' or len(body) > 2:
             self.send_to_chat(message,u'себе анус кикни, пёс')
             return
-        file = open('D:\\Telebot\\kick', 'r')
-        file_raw = file.read()
-        file.close()
-        temp_number = []
-        strings = file_raw.split('\n')
-        for number in range(len(strings)):
-            temp_1 = strings[number]
-            temp = strings[number].split(',')
-            if temp[0] == message['body'][6:]:
-                temp_number= number
-                break
-            temp= []
 
-        if not temp:
-            temp = []
-            text= str(message['body'][6:]) + ','
-            strings.append(text)
-            temp_number = -1
-            temp.append(text)
-        print(strings)
+        if domain in self.kick_dic:
+            temp = self.kick_dic[domain]
+        else:
+            self.kick_dic[domain] = []
+            temp = self.kick_dic[domain]
 
         if str(message['uid']) in temp:
             self.send_to_chat(message, u'Вы уже голосовали за этого Васяна')
             return
         else:
-            text = str(message['uid'])+ ','
-            print(text)
-            temp.append(text)
+            temp.append(message['uid'])
 
         if len(temp) >= 5:
             users = self.bot.messages.getChatUsers(chat_id=message['chat_id'], fields='screen_name')
             kick_id = 0
             for user in users:
-                if user['screen_name'] in temp[0]:
+                if user['screen_name'] == domain:
                     kick_id = user['uid']
                     break
             if kick_id:
@@ -147,19 +154,12 @@ class Imperial():
             else:
                 self.send_to_chat(message,u'Пользователь уже удаленно из беседы, балда')
 
-        print(temp)
-
-        string_out_of_temp = ''
-        for i in temp:
-            string_out_of_temp = string_out_of_temp + i
-
-        if temp_number:
-            strings[temp_number] = string_out_of_temp
-
-        print(strings)
         file = open('D:\\Telebot\\kick', 'w')
-        for string in strings:
-            file.write(string + '\n')
+        for element in self.kick_dic:
+            file.write(element + ' ')
+            for ids in self.kick_dic[element]:
+                file.write(ids + ' ')
+            file.write('\n')
 
         self.send_to_chat(message, text= u'Голос учтен')
 
@@ -260,8 +260,6 @@ class Imperial():
     def info(self,message):
         percent = u'Вероятность события = ' + str(choice(range(101))) + '%'
         self.send_to_chat(message,percent,reply=1)
-
-
 
 if __name__ == '__main__':
   Reginald = Imperial()
