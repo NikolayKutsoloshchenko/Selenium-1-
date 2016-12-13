@@ -1,4 +1,4 @@
-#encoding=utf-8
+﻿#encoding=utf-8
 
 import vk
 from random import choice
@@ -6,7 +6,7 @@ import time
 
 class Imperial():
     def __init__(self):
-        Session = vk.Session(access_token='1c3e54d0678327e723d057cc5efd76e24f53184efcf882486e40a39f98a889082eec83886f75e4e62fd1f')
+        Session = vk.Session(access_token='')
         self.bot= vk.API(Session)
         self.id = '363590949'
         self.get_faces()
